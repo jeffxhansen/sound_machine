@@ -1,15 +1,23 @@
-from gpiozero import Servo, Device
-from gpiozero.pins.lgpio import LGPIOFactory
-
-# Use lgpio pin factory for better PWM control
-Device.pin_factory = LGPIOFactory()
+import RPi.GPIO as GPIO
+from time import sleep
 
 GPIO_PIN = 18
-
+PWM_FREQUENCY = 50  # 50 Hz for servo control
 STEP_SIZE = 0.05  # Increment for each step
 
-servo = Servo(GPIO_PIN)
+# Setup GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(GPIO_PIN, GPIO.OUT)
+pwm = GPIO.PWM(GPIO_PIN, PWM_FREQUENCY)
+
 current_position = 0.0
+
+def angle_to_duty_cycle(angle):
+    """
+    Convert servo angle (-1.0 to 1.0) to PWM duty cycle (2% to 12%)
+    -1.0 = 2% (0ms), 0.0 = 7% (1.5ms), 1.0 = 12% (2.4ms)
+    """
+    return 7 + (angle * 5)
 
 def print_menu():
     print("\n--- Servo Position Selector ---")
@@ -23,13 +31,15 @@ def print_menu():
 def move_up():
     global current_position
     current_position = min(current_position + STEP_SIZE, 1.0)
-    servo.value = current_position
+    pwm.ChangeDutyCycle(angle_to_duty_cycle(current_position))
+    sleep(0.1)  # Brief delay for servo to move
     print(f"Moved UP - New position: {current_position:.2f}")
 
 def move_down():
     global current_position
     current_position = max(current_position - STEP_SIZE, -1.0)
-    servo.value = current_position
+    pwm.ChangeDutyCycle(angle_to_duty_cycle(current_position))
+    sleep(0.1)  # Brief delay for servo to move
     print(f"Moved DOWN - New position: {current_position:.2f}")
 
 def main():
@@ -37,7 +47,9 @@ def main():
     
     print("Servo Position Selector")
     print(f"Starting at position: {current_position:.2f}")
-    servo.value = current_position
+    
+    pwm.start(0)
+    pwm.ChangeDutyCycle(angle_to_duty_cycle(current_position))
     
     while True:
         print_menu()
@@ -53,7 +65,8 @@ def main():
         else:
             print("Invalid command. Please enter 'u', 'd', or 'q'.")
     
-    servo.close()
+    pwm.stop()
+    GPIO.cleanup()
     print("Servo closed.")
 
 if __name__ == "__main__":
