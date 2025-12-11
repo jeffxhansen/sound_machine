@@ -1,9 +1,9 @@
 from gpiozero import Servo, Device
-from gpiozero.pins.rpigpio import RPiGPIOFactory
+from gpiozero.pins.lgpio import LGPIOFactory
 from time import sleep
 
-# Use RPiGPIOFactory for Pi 5 compatibility
-Device.pin_factory = RPiGPIOFactory()
+# Use lgpio pin factory for better PWM control
+Device.pin_factory = LGPIOFactory()
 
 GPIO_PIN = 18
 STEP_SIZE = 0.05  # Increment for each step
