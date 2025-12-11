@@ -8,8 +8,8 @@ Device.pin_factory = LGPIOFactory()
 
 GPIO_PIN = 18
 
-START_ANGLE = 0.0      # Starting position (resting angle)
-END_ANGLE = 0.9        # Maximum extension to press button
+START_ANGLE = 1.0      # Starting position (resting angle)
+END_ANGLE = 0.0        # Maximum extension to press button
 STEP = 0.05            # Small increments for smooth motion
 TIME_TO_PRESS = 2.0    # Total time in seconds to press the button
 
@@ -35,13 +35,14 @@ def press_button():
         print(f"Slowly pressing button over {TIME_TO_PRESS} seconds...")
         
         # Calculate number of steps and sleep interval
-        angle_range = END_ANGLE - START_ANGLE
+        angle_range = abs(END_ANGLE - START_ANGLE)
         num_steps = math.ceil(angle_range / STEP)
         sleep_interval = TIME_TO_PRESS / num_steps
         
         current_angle = START_ANGLE
         for i in range(num_steps):
-            current_angle = min(START_ANGLE + (i + 1) * STEP, END_ANGLE)
+            current_angle = START_ANGLE - (i + 1) * STEP
+            current_angle = max(current_angle, END_ANGLE)
             servo.value = current_angle
             sleep(sleep_interval)
         
