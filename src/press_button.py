@@ -13,13 +13,15 @@ try:
     
     max_up_position = -0.4
     start_position = -0.2
-    end_position = 0.2
+    end_position = 0.3
     
     servo.value = max_up_position
     sleep(0.2)
     servo.value = start_position
     sleep(0.2)
     servo.value = end_position
+    sleep(0.2)
+    servo.value = max_up_position
     sleep(0.2)
     
 finally:
