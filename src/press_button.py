@@ -12,8 +12,7 @@ servo = Servo(GPIO_PIN)
 try:
     
     max_up_position = -0.4
-    start_position = -0.2
-    end_position = 0.4
+    end_position = 0.5
     
     servo.value = max_up_position
     sleep(0.5)
