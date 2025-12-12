@@ -10,11 +10,10 @@ GPIO_PIN = 18
 servo = Servo(GPIO_PIN)
 
 try:
-    print("Starting wave motion...")
     
     max_up_position = -0.4
     start_position = -0.2
-    end_position = 0.0
+    end_position = 0.1
     
     servo.value = max_up_position
     sleep(0.2)
