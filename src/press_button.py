@@ -16,13 +16,11 @@ try:
     end_position = 0.3
     
     servo.value = max_up_position
-    sleep(0.2)
-    servo.value = start_position
-    sleep(0.2)
+    sleep(0.5)
     servo.value = end_position
-    sleep(0.2)
+    sleep(0.5)
     servo.value = max_up_position
-    sleep(0.2)
+    sleep(0.5)
     
 finally:
     servo.close()
